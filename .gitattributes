@@ -1,3 +1,2 @@
-special-vendored-path/* linguist-vendored
+* linguist-vendored
 *.html linguist-vendored=false
-*.txt linguist-vendored=false
