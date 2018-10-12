@@ -1,0 +1,101 @@
+
+
+\documentclass{article}
+
+\usepackage[version=3]{mhchem} % Package for chemical equation typesetting
+\usepackage{siunitx} % Provides the \SI{}{} and \si{} command for typesetting SI units
+\usepackage{graphicx} % Required for the inclusion of images
+\usepackage{natbib} % Required to change bibliography style to APA
+\usepackage{amsmath} % Required for some math elements 
+\usepackage[title]{appendix}
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+
+%\usepackage{times} % Uncomment to use the Times New Roman font
+
+\renewcommand{\thesection}{}% Remove section references...
+\renewcommand{\thesubsection}{\arabic{subsection}}
+%----------------------------------------------------------------------------------------
+%	DOCUMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{ Markovitz Portfolio Analysis  \\ Financial Signal Processing - ECE-478} % Title
+\author{Zheng \textsc{Liu}} % Author name
+
+\date{\today} % Date for the report
+
+\begin{document}
+
+\maketitle % Insert the title, author and date
+
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 
+%----------------------------------------------------------------------------------------
+
+\section*{General Results}
+
+\subsubsection*{Note}
+This section mainly use data and graphs of 2006. The 2016 results are very similar to 2006. 2008 has some fun things, which will be covered separately. 
+
+\subsubsection*{}
+
+The $(\mu,\sigma)$ pairs are:\\ \\
+\begin{tabular}{l | l | l}
+ Portfolio Type & $\mu$ & $\sigma$ \\\hline
+Market & 0.8434&1.9049\\ 
+MVP&0.0344&0.2946\\
+ S\&P 500& 0.0542&1.1385\\ 
+Naive& 0.0814&0.7798\\ 
+
+\end{tabular}
+\\ \\ \\
+\begin{itemize}
+\item  We can see the sigma value of MVP is the smallest. The market portfolio has a large return. S\&P 500 is very different from the market portfolio.
+
+\includegraphics[width=\textwidth]{2006_1}
+
+\item It is obvious that they are all hyperbolic. \\
+
+\includegraphics[width=\textwidth]{2008_5}
+
+\item If we superimpose the Markovitz Bullet onto the graph, we can see all the curves are inside, which is consistent with the theory. (The graph is for 2008)\\
+
+
+\includegraphics[width=\textwidth]{2006_2}
+\item Above is the efficient frontier and the capital market line. We can see that the line is tangent to teh curve.\\
+
+\item Becasue the efficient frontier is monotonically increasing, bigger $\mu$ will result in bigger $\sigma$. Then, three portfolios on the efficient frontier were chosen randomly. The idea of convex combination is proved. The results are shown in the matlab files by values and some boolean algebra.\\
+
+\item R is smaller than $\mu_{MVP}$ for 2006 and 2016 but the $\mu_{MVP}$ is negative in 2008.\\
+\item The equations for the capital market lines are shown in the matlab files.
+
+\includegraphics[width=\textwidth]{2006_3}
+\item The beta values are shown in the matlab files. Agreeing with the theory, the points are all on the same line, apart from each other. MVP is always the lowest point. THe portfolios on the efficient frontier tend to have bigger beta factors. 
+
+\includegraphics[width=\textwidth]{2006_4}
+\item Interestingly the market portfolio seems to usually perform the best (because I used \textit{randperm} to choose the three portfolios, occasionally these portfolios outperform.) The order of their performance mostly follows that of the average return.
+
+
+ \end{itemize}
+
+\section{Special Results for 2008}
+\begin{itemize}
+\item 2008 is during the Great Recession. Some abnormal results are observed. Because in 2008, $R<\mu_{MVP}$, market porfolio does not really exist. We can see it from the graph below. The curve is  intentionally extended (so not an efficient frontier anymore). 
+
+\includegraphics[width=\textwidth]{2008_2}
+
+\includegraphics[width=\textwidth]{2008_1}
+\item The randomly selected 5 pairs of securities are mostly losing money.
+
+\includegraphics[width=\textwidth]{2008_3}
+
+\item The beta factors are not useful for 2008 data but they can still form a straight line.
+
+\includegraphics[width=\textwidth]{2008_4}
+The start value is \$1, so we can see that except for two of the three portfolios on the efficient frontier, the rest is losing money. The MVP loses the least as it minimizes the risk.
+ \end{itemize}
+\end{document}

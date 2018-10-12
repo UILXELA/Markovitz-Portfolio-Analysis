@@ -1,0 +1,378 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>fsp_2016</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-10-11"><meta name="DC.source" content="fsp_2016.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">a</a></li><li><a href="#3">b</a></li><li><a href="#4">c</a></li><li><a href="#5">d</a></li><li><a href="#6">f</a></li><li><a href="#7">g</a></li><li><a href="#8">h</a></li></ul></div><pre class="codeinput">load(<span class="string">'FF48_2016.mat'</span>)
+FF48 = cell2mat(struct2cell(struct));
+load(<span class="string">'sp500_2016.mat'</span>)
+sp500 = struct.return;
+R = 0.00377;
+</pre><h2 id="2">a</h2><pre class="codeinput">[M,N] = size(FF48);
+one = ones(48,1);
+mean_FF48 = mean(FF48,2);
+cov_FF48 = mycov(FF48);
+</pre><h2 id="3">b</h2><pre class="codeinput">w_naive = linspace(1/48,1/48,48).';
+mu_naive = mean(mean_FF48);
+risk_naive = sqrt(w_naive.'*cov_FF48*w_naive);
+
+mu_mkt = mean(sp500,2);
+var_mkt = mycov(sp500);
+risk_mkt = sqrt(var_mkt);
+
+
+risk_mvp = 1/sqrt(one.'*inv(cov_FF48)*one);
+w_mvp = risk_mvp^2*inv(cov_FF48)*one;
+mu_mvp = mean_FF48.'*w_mvp;
+
+figure();
+<span class="keyword">for</span> i = 1:5
+    choice = randperm(48,2);
+    w_two = [linspace(0,1,1000);1-linspace(0,1,1000)];
+    mean_two = mean_FF48(choice,:);
+    mu = mean_two.'*w_two;
+    cov_two =mycov(FF48(choice,:));
+    sigma_temp = sqrt(w_two.'*cov_two*w_two);
+    sigma = diag(sigma_temp).';
+    plot(sigma,mu);
+    hold <span class="string">on</span>
+<span class="keyword">end</span>
+<span class="comment">%plot(risk,returns);</span>
+title(<span class="string">'Feasible Portfolio Curves'</span>)
+</pre><img vspace="5" hspace="5" src="fsp_2016_01.png" alt=""> <h2 id="4">c</h2><pre class="codeinput">returns = [mu_mvp:0.001:1];
+m = [mean_FF48,one];
+B = m.'*inv(cov_FF48)*m;
+risk=[];
+<span class="keyword">for</span> r=returns
+    risk = [risk,sqrt([r,1]*inv(B)*m.'*inv(cov_FF48)*m*inv(B)*[r,1].')];
+<span class="keyword">end</span>
+figure();
+plot(risk,returns);
+hold <span class="string">on</span>
+plot([0,risk_mkt],[R,mu_mkt])
+hold <span class="string">on</span>
+</pre><img vspace="5" hspace="5" src="fsp_2016_02.png" alt=""> <h2 id="5">d</h2><pre class="codeinput">ports = sort(randperm(size(returns,2),3));
+port1 = [returns(ports(1)), risk(ports(1))];
+port2 = [returns(ports(2)), risk(ports(2))];
+port3 = [returns(ports(3)), risk(ports(3))];
+
+w1= inv(cov_FF48)*m*inv(B)*[port1(1),1].';
+w2= inv(cov_FF48)*m*inv(B)*[port2(1),1].';
+w3= inv(cov_FF48)*m*inv(B)*[port3(1),1].';
+
+convex_comb = linsolve([w1,w3],w2);
+con = [w1,w3]*convex_comb-w2;
+convex_test = all(convex_comb&gt;0)&amp;all(con&lt;1e-10)
+</pre><pre class="codeoutput">
+convex_test =
+
+  logical
+
+   1
+
+</pre><h2 id="6">f</h2><pre class="codeinput">m_ex = m(:,1)-R;
+w_m = 1/(ones(1,48)*inv(cov_FF48)*m_ex)*inv(cov_FF48)*m_ex;
+mu_m = mean_FF48.'*w_m;
+risk_m = sqrt(w_m.'*cov_FF48*w_m);
+plot([0,risk_m],[R,mu_m]);
+legend(<span class="string">'efficient frontier'</span>,<span class="string">'s&amp;p 500 line'</span>,<span class="string">'Capital Market Line'</span>);
+title(<span class="string">'Efficient Frontier'</span>)
+slope = (mu_m-R)/risk_m;
+fprintf(<span class="string">'mu = %d * sigma + %d\n'</span>,slope,R)
+</pre><pre class="codeoutput">mu = 4.441159e-01 * sigma + 3.770000e-03
+</pre><img vspace="5" hspace="5" src="fsp_2016_03.png" alt=""> <h2 id="7">g</h2><pre class="codeinput">beta_mvp = beta(cov_FF48,w_mvp,w_m)
+beta_1 = beta(cov_FF48,w1,w_m)
+beta_2 = beta(cov_FF48,w2,w_m)
+beta_3 = beta(cov_FF48,w3,w_m)
+beta_naive = beta(cov_FF48,w_naive,w_m)
+
+figure();
+c = linspace(1,10,5);
+scatter([beta_mvp,beta_1,beta_2,beta_3,beta_naive],[mu_mvp,port1(1),port2(1),port3(1),mu_naive],[],c)
+hold <span class="string">on</span>
+plot([beta_mvp,beta_1,beta_2,beta_3,beta_naive],[mu_mvp,port1(1),port2(1),port3(1),mu_naive])
+title(<span class="string">'\beta-\mu Relationship'</span>)
+</pre><pre class="codeoutput">
+beta_mvp =
+
+    0.2192
+
+
+beta_1 =
+
+    0.9325
+
+
+beta_2 =
+
+    1.3191
+
+
+beta_3 =
+
+    1.9642
+
+
+beta_naive =
+
+    0.2069
+
+</pre><img vspace="5" hspace="5" src="fsp_2016_04.png" alt=""> <h2 id="8">h</h2><pre class="codeinput">K_m = (FF48.'*w_m*0.01+1).';
+K_mvp = (FF48.'*w_mvp*0.01+1).';
+K_naive = (FF48.'*w_naive*0.01+1).';
+K_1 = (FF48.'*w1*0.01+1).';
+K_2 = (FF48.'*w2*0.01+1).';
+K_3 = (FF48.'*w3*0.01+1).';
+
+time = [0:1:size(K_m,2)];
+
+money_m = money(K_m);
+money_mvp = money(K_mvp);
+money_naive = money(K_naive);
+money_1 = money(K_1);
+money_2 = money(K_2);
+money_3 = money(K_3);
+
+figure();
+plot(time,money_m);
+hold <span class="string">on</span>
+plot(time,money_mvp);
+hold <span class="string">on</span>
+plot(time,money_naive);
+hold <span class="string">on</span>
+plot(time,money_1);
+hold <span class="string">on</span>
+plot(time,money_2);
+hold <span class="string">on</span>
+plot(time,money_3);
+title(<span class="string">'Value in Time'</span>);
+legend(<span class="string">'market'</span>, <span class="string">'MVP'</span>, <span class="string">'Naive'</span>, <span class="string">'Portfolio 1'</span>, <span class="string">'Portfolio 2'</span>, <span class="string">'Portfolio 3'</span>)
+
+<span class="keyword">function</span> c = mycov(data)
+    c = 1/(size(data,2)-1)*(data*data.'-mean(data,2)*mean(data,2).');
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> b = beta(c,w_v,w_mkt)
+    b = (w_mkt.'*c*w_v)/(w_mkt.'*c*w_mkt);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> mon = money(K)
+    day = size(K,2);
+    base = ones(1,day);
+    K_ = zeros(1,day);
+    K_(1) = K(1);
+    <span class="keyword">for</span> i = 2:day
+       K_(i) = K_(i-1)*K(i);
+    <span class="keyword">end</span>
+    mon = [1,base.*K_];
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="fsp_2016_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+load('FF48_2016.mat')
+FF48 = cell2mat(struct2cell(struct));
+load('sp500_2016.mat')
+sp500 = struct.return;
+R = 0.00377;
+
+
+%% a
+[M,N] = size(FF48);
+one = ones(48,1);
+mean_FF48 = mean(FF48,2);
+cov_FF48 = mycov(FF48);
+
+%% b
+w_naive = linspace(1/48,1/48,48).';
+mu_naive = mean(mean_FF48);
+risk_naive = sqrt(w_naive.'*cov_FF48*w_naive);
+
+mu_mkt = mean(sp500,2);
+var_mkt = mycov(sp500);
+risk_mkt = sqrt(var_mkt);
+
+
+risk_mvp = 1/sqrt(one.'*inv(cov_FF48)*one);
+w_mvp = risk_mvp^2*inv(cov_FF48)*one;
+mu_mvp = mean_FF48.'*w_mvp;
+
+figure();
+for i = 1:5
+    choice = randperm(48,2);
+    w_two = [linspace(0,1,1000);1-linspace(0,1,1000)];
+    mean_two = mean_FF48(choice,:);
+    mu = mean_two.'*w_two;
+    cov_two =mycov(FF48(choice,:));
+    sigma_temp = sqrt(w_two.'*cov_two*w_two);
+    sigma = diag(sigma_temp).';
+    plot(sigma,mu);
+    hold on
+end
+%plot(risk,returns);
+title('Feasible Portfolio Curves')
+%% c
+returns = [mu_mvp:0.001:1];
+m = [mean_FF48,one];
+B = m.'*inv(cov_FF48)*m;
+risk=[];
+for r=returns
+    risk = [risk,sqrt([r,1]*inv(B)*m.'*inv(cov_FF48)*m*inv(B)*[r,1].')];
+end
+figure();
+plot(risk,returns);
+hold on
+plot([0,risk_mkt],[R,mu_mkt])
+hold on
+
+%% d 
+ports = sort(randperm(size(returns,2),3));
+port1 = [returns(ports(1)), risk(ports(1))];
+port2 = [returns(ports(2)), risk(ports(2))];
+port3 = [returns(ports(3)), risk(ports(3))];
+
+w1= inv(cov_FF48)*m*inv(B)*[port1(1),1].';
+w2= inv(cov_FF48)*m*inv(B)*[port2(1),1].';
+w3= inv(cov_FF48)*m*inv(B)*[port3(1),1].';
+
+convex_comb = linsolve([w1,w3],w2);
+con = [w1,w3]*convex_comb-w2;
+convex_test = all(convex_comb>0)&all(con<1e-10)
+
+%% f
+m_ex = m(:,1)-R;
+w_m = 1/(ones(1,48)*inv(cov_FF48)*m_ex)*inv(cov_FF48)*m_ex;
+mu_m = mean_FF48.'*w_m;
+risk_m = sqrt(w_m.'*cov_FF48*w_m);
+plot([0,risk_m],[R,mu_m]);
+legend('efficient frontier','s&p 500 line','Capital Market Line');
+title('Efficient Frontier')
+slope = (mu_m-R)/risk_m;
+fprintf('mu = %d * sigma + %d\n',slope,R)
+%% g
+beta_mvp = beta(cov_FF48,w_mvp,w_m)
+beta_1 = beta(cov_FF48,w1,w_m)
+beta_2 = beta(cov_FF48,w2,w_m)
+beta_3 = beta(cov_FF48,w3,w_m)
+beta_naive = beta(cov_FF48,w_naive,w_m)
+
+figure();
+c = linspace(1,10,5);
+scatter([beta_mvp,beta_1,beta_2,beta_3,beta_naive],[mu_mvp,port1(1),port2(1),port3(1),mu_naive],[],c)
+hold on
+plot([beta_mvp,beta_1,beta_2,beta_3,beta_naive],[mu_mvp,port1(1),port2(1),port3(1),mu_naive])
+title('\beta-\mu Relationship')
+%% h
+K_m = (FF48.'*w_m*0.01+1).';
+K_mvp = (FF48.'*w_mvp*0.01+1).';
+K_naive = (FF48.'*w_naive*0.01+1).';
+K_1 = (FF48.'*w1*0.01+1).';
+K_2 = (FF48.'*w2*0.01+1).';
+K_3 = (FF48.'*w3*0.01+1).';
+
+time = [0:1:size(K_m,2)];
+
+money_m = money(K_m);
+money_mvp = money(K_mvp);
+money_naive = money(K_naive);
+money_1 = money(K_1);
+money_2 = money(K_2);
+money_3 = money(K_3);
+
+figure();
+plot(time,money_m);
+hold on
+plot(time,money_mvp);
+hold on
+plot(time,money_naive);
+hold on
+plot(time,money_1);
+hold on
+plot(time,money_2);
+hold on
+plot(time,money_3);
+title('Value in Time');
+legend('market', 'MVP', 'Naive', 'Portfolio 1', 'Portfolio 2', 'Portfolio 3')
+
+function c = mycov(data)
+    c = 1/(size(data,2)-1)*(data*data.'-mean(data,2)*mean(data,2).');
+end
+
+function b = beta(c,w_v,w_mkt)
+    b = (w_mkt.'*c*w_v)/(w_mkt.'*c*w_mkt);
+end
+
+function mon = money(K)
+    day = size(K,2);
+    base = ones(1,day);
+    K_ = zeros(1,day);
+    K_(1) = K(1);
+    for i = 2:day
+       K_(i) = K_(i-1)*K(i);
+    end
+    mon = [1,base.*K_];
+end
+
+##### SOURCE END #####
+--></body></html>
